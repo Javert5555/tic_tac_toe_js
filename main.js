@@ -57,3 +57,26 @@ let checkResult = (resArr, winArr) => {
     });
     });
 };
+
+
+// let cont = document.getElementsByTagName('td');
+
+// let xOrO = newFun(event);
+
+// for(let i = 0; i < cont.length; i++){
+//     cont[i].onclick = xOrO;
+// }
+
+// function newFun () {
+//     let j = 0;
+//     return function () {
+//         if (j==0 || j%2==0){
+//             this.innerHTML = "X";
+//             j++;
+//         }
+//         else {
+//             this.innerHTML = "O";
+//             j++;
+//         }
+//     };
+// }

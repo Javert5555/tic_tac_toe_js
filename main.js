@@ -1,94 +1,89 @@
-// window.onload = () => {
-//     let squares = document.getElementsByTagName("td");
-//     res = [
-//         ["", "", ""],
-//         ["", "", ""],
-//         ["", "", ""]
-//     ];
-//     winInd = [
-//         [[0,0], [0,1], [0,2]],
-//         [[1,0], [1,1], [1,2]],
-//         [[2,0,] [2,1], [2,2]],
-//         [[0,0,] [1,0], [2,0]],
-//         [[1,0], [1,1], [1,2]],
-//         [[2,0], [2,1], [2,2]],
-//         [[2,0], [2,1], [0,2]],
-//         [[0,0], [1,1], [2,2]]
-//     ];
-//     for(let i = 0; i < squares.length; i++){
-//         if(i == 0 || i%2==0) {
-//             squares[i].onclick = setSymbolX;
-//         }
-//         else{
-//             squares[i].onclick = setSymbolO;
-//         }
-//     }
-// };
 
-// let checkResult = (resArr, winArr) => {
-//     winArr.forEach((value, index) =>{
-//         let variable1, variable2, variable3;
-//         value.forEach((currentVaule, currentIndex) =>{
-//             let index0 = currentVaule[0];
-//             let index1 = currentVaule[1];
-//             variable1 = resArr[index0][index1];
-//     });
-//     });
-// };
-let arr4 = [1,2,3];
-let arr5 = [1, ,3];
-function equalArr(arr1,arr2) {
-    for(let i =0,len= arr1.length;i<len;i++){
-        console.log(i);
-        if(!arr1[i] && arr2[i]) return false;
-        if(arr1[i] !== arr2[i]){
-            return false;
+/*
+* Проверяет на равенство все элементы переданного массива
+*/
+function allEqual(arr){
+    return arr.every((item) =>{
+        return item === arr[0] && (item === "X" || item === "O");
+    })
+}
+function Game () {
+    this.res = [
+        ["", "", ""],
+        ["", "", ""],
+        ["", "", ""]
+    ];
+    this.winInd = [
+        [[0,0], [0,1], [0,2]],
+        [[1,0], [1,1], [1,2]],
+        [[2,0], [2,1], [2,2]],
+        [[0,0], [1,0], [2,0]],
+        [[1,0], [1,1], [1,2]],
+        [[2,0], [2,1], [2,2]],
+        [[2,0], [2,1], [0,2]],
+        [[0,0], [1,1], [2,2]]
+    ];
+}
+
+Game.prototype.checkResult = function(){
+    console.log('This',this);
+    for (let item of this.winInd) {
+        let arrForCheck =  [];
+        for (let value of item) {
+            console.log("this.res", this.res);
+            arrForCheck.push(this.res[value[0]][value[1]]);
+            console.log("arrForCheck", arrForCheck);
+        }
+        if (allEqual(arrForCheck) ) {
+            return true;
         }
     }
-
-    return true;
+    return false;
+};
+Game.prototype.setSymbol = function(currentId,symbol){
+        let currentIndexArr = currentId.split("");
+        let index0 = currentIndexArr[0];
+        let index1 = currentIndexArr[1];
+        this.res[index0][index1] = symbol;
+        console.log(this.res);
 
 }
-function Game (res, winInd) {
-    this.res = res;
-    this.winInd = winInd;
-}
+Game.prototype.run = function(){
+    let cont = document.getElementsByTagName('td');
+    let xOrO = callBack(this);
 
-Game.prototype.checkResult = function () {
-    console.log('this.res',this.res);
-    console.log(' this.winInd',this.winInd);
-    for (let key in this.res) {
-        console.log('this.res',this.res);
-        console.log('this.res',this.res);
-        if (this.res[key] == this.winInd[key]) {
-            console.log("its true");
-        }
+    for(let i = 0; i < cont.length; i++){
+        cont[i].onclick = xOrO;
     }
-}
 
-let user = new Game([[1,2,3]], [[1,2,3]]);
+    function callBack (obj) {
+        let j = true;
 
-user.checkResult();
+        return function () {
+            console.log('this',this.id);
+            if (j){
+                this.innerHTML = "X";
+                obj.setSymbol(this.id,'X');
+                j = !j;
+            }
+            else {
+                this.innerHTML = "O";
+                obj.setSymbol(this.id,'O');
+                j = !j;
+            }
+            // проверка после каждого клика на выигрышную комбинацию
+            if(obj.checkResult()){
+                alert('Победа');
+                return;
+            }
+        };
+    }
+
+};
+
+let user = new Game();
+
+user.run();
 
 
-// let cont = document.getElementsByTagName('td');
-//
-// let xOrO = newFun(event);
-//
-// for(let i = 0; i < cont.length; i++){
-//     cont[i].onclick = xOrO;
-// }
-//
-// function newFun () {
-//     let j = true;
-//     return function () {
-//         if (j){
-//             this.innerHTML = "X";
-//             j = !j;
-//         }
-//         else {
-//             this.innerHTML = "O";
-//             j = !j;
-//         }
-//     };
-// }
+
